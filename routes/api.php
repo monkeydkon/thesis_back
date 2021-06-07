@@ -93,7 +93,7 @@ Route::group([
 ], function () {
 
     Route::get('/email', [UserController::class, 'findByEmail']);
-    Route::put('/summary', [UserController::class, 'updateSummary'])->middleware('auth');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->middleware('auth');
     Route::post('/{id}/follow', [UserController::class, 'follow'])->middleware('auth');
     Route::post('/{id}/unfollow', [UserController::class, 'unfollow'])->middleware('auth');
     Route::get('/following/{id}', [UserController::class, 'getFollowStatus'])->middleware('auth');

@@ -28,12 +28,19 @@ class UserController extends Controller
         return User::with('blogs')->where('id', $id)->firstOrFail();
     }
 
-    public function updateSummary(Request $request)
+    public function updateProfile(Request $request)
     {
+
+        $request->validate([
+            'linkedin' => 'nullable|url',
+            'github' => 'nullable|url'
+        ]);
 
         $user = User::where('id', auth()->user()->id)->first();
 
         $user->summary = $request->summary;
+        $user->linkedin = $request->linkedin;
+        $user->github = $request->github;
 
         $user->save();
 
@@ -54,7 +61,8 @@ class UserController extends Controller
         return $follower->save();
     }
 
-    public function unfollow ($id){
+    public function unfollow($id)
+    {
         $following = Followers::where('user_id', $id)->where('follower_id', auth()->user()->id);
         $following->delete();
 
