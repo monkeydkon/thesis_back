@@ -57,8 +57,13 @@ Route::group([
     Route::get('/', [CourseController::class, 'getClasses']);
     Route::post('/', [CourseController::class, 'createClass'])->middleware('teacher');
     Route::get('{course_id}/search/{query}', [CourseController::class, 'search']);
+    Route::post('{course_id}/addUser', [CourseController::class, 'addUserToClass'])->middleware('teacher');
     
     // Route::post('/post', [CourseController::class, 'createPost']);
+    Route::get('/{id}/users', [CourseController::class, 'getUsers'])->middleware('teacher');
+    Route::get('/{id}/chats', [CourseController::class, 'getChats'])->middleware('student');
+    Route::get('/{course_id}/chat/user/{user_id}', [CourseController::class, 'getTeacherChat'])->middleware('teacher');
+    Route::post('/{course_id}/chats/{chat_id}/message', [CourseController::class, 'postMessage']);
 
     Route::group([
         'middleware' => 'teacher',
@@ -86,7 +91,16 @@ Route::group([
         Route::post('/', [AssignmentsController::class, 'newAssignment'])->middleware('teacher');
         Route::get('{id}/file', [AssignmentsController::class, 'download']);
     });
+
+    // Route::group([
+    //     'prefix' => 'chats'
+    // ], function(){
+    //     Route::get('/')
+    // });
+    
 });
+
+Route::get('/blogs/{id}/image',[BlogsController::class, 'getImage']);
 
 Route::group([
     'prefix' => 'user'
@@ -98,7 +112,9 @@ Route::group([
     Route::post('/{id}/unfollow', [UserController::class, 'unfollow'])->middleware('auth');
     Route::get('/following/{id}', [UserController::class, 'getFollowStatus'])->middleware('auth');
     Route::get('/following', [UserController::class, 'getUsersFollowing'])->middleware('auth');
+    Route::get('/teacher', [UserController::class, 'searchTeacher'])->middleware(['auth', 'teacher']);
     Route::get('/{id?}', [UserController::class, 'findUser'])->middleware('auth');
+   
 
 
     Route::group([
@@ -106,6 +122,12 @@ Route::group([
         'middleware' => 'auth'
     ], function () {
         Route::post('/', [BlogsController::class, 'createBlog']);
+      //  Route::get('/{id}/image', [BlogsController::class, 'getImage']);
+        Route::post('/{id}/comment', [BlogsController::class, 'addComment']);
+        Route::post('/{id}/image', [BlogsController::class, 'addImage']);
+        Route::delete('/{blog_id}/comments/{comment_id}', [BlogsController::class, 'deleteComment']);
         Route::get('/all', [BlogsController::class, 'getBlogs']);
     });
 });
+
+

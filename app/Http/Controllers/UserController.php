@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Followers;
+use App\Models\Role;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -11,21 +13,62 @@ class UserController extends Controller
     //
     public function findByEmail(Request $request)
     {
-        $email = $request->validate([
-            'email' => 'required|email'
+        $request->validate([
+            'email' => 'required'
         ]);
 
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', 'LIKE', "%{$request->email}%")->get();
 
         if (!$user) {
             return response()->json(['message' => 'user not found'], 500);
         }
+
+        $role_id = Role::where('name', 'student')->first()->id;
+     //   return $user;
+        // return $user->filter(function ($item) use ($role_id) {
+        //     return $item->role->role_id == $role_id;
+        // });
+
         return $user;
+
+        $user = $user->filter(function ($item) use ($role_id) {
+            return $item->role->role_id == $role_id;
+        });
+
+        $xaxa = [];
+        // $user->each(function($item) use($xaxa){
+        // //    $response->xaxa($item);
+        //     array_push($xaxa, $item);
+        // });
+        // for($user as $lol){
+        //     array_push($xaxa, $item);
+        // }
+
+        return $xaxa;
+        //return $user;
     }
 
     public function findUser($id)
     {
-        return User::with('blogs')->where('id', $id)->firstOrFail();
+        return User::with('blogs.comments.user')->where('id', $id)->firstOrFail();
+    }
+
+    public function searchTeacher(Request $request)
+    {
+        $search = strtolower($request->query('search'));
+        $teachers = User::with('role')->where('email', '!=', auth()->user()->email)
+            ->where(function ($q) use ($search) {
+                $q->where('firstName', 'LIKE', "%{$search}%")
+                    ->orWhere('lastName', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            })
+            ->get();
+
+        $role_id = Role::where('name', 'teacher')->first()->id;
+
+        return $teachers->filter(function ($item) use ($role_id) {
+            return $item->role->role_id == $role_id;
+        });
     }
 
     public function updateProfile(Request $request)

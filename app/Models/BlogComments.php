@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourseMembers extends Model
+class BlogComments extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['course_id', 'user_id'];
+    protected $fillable = ['comment' ,'user_id'];
 
-    public function course(){
-        return $this->belongsTo(Course::class);
+    public function blog()
+    {
+        return $this->belongsTo(Blogs::clas);
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }
