@@ -17,7 +17,7 @@ class UserController extends Controller
             'email' => 'required'
         ]);
 
-        $user = User::where('email', 'LIKE', "%{$request->email}%")->get();
+        $user = User::with('role')->where('email', 'LIKE', "%{$request->email}%")->get();
 
         if (!$user) {
             return response()->json(['message' => 'user not found'], 500);
@@ -29,11 +29,12 @@ class UserController extends Controller
         //     return $item->role->role_id == $role_id;
         // });
 
-        return $user;
+    
 
         $user = $user->filter(function ($item) use ($role_id) {
             return $item->role->role_id == $role_id;
         });
+        return $user;
 
         $xaxa = [];
         // $user->each(function($item) use($xaxa){

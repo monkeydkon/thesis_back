@@ -93,4 +93,20 @@ class BlogsController extends Controller
 
         return $comment->delete();
     }
+
+    public function deleteBlog($id)
+    {
+        $blog = Blogs::find($id);
+
+        if (!$blog) {
+            return response()->json(['message' => 'no such blog'], 404);
+        }
+
+        if ($blog->user_id != auth()->user()->id) {
+            return response()->json(['message' => 'unauthorized'], 403);
+        }
+
+        return $blog->delete();
+        
+    }
 }

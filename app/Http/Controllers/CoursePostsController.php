@@ -24,8 +24,14 @@ class CoursePostsController extends Controller
         $post->content = $data['content'];
         $post->course_id = $data['course_id'];
 
-      //  return $post;
+        //  return $post;
         $post->save();
         return $post;
+    }
+
+    public function deletePost($id)
+    {
+        $post = CoursePosts::find($id);
+        return $post->delete();
     }
 }

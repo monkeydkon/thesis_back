@@ -121,6 +121,14 @@ class CourseController extends Controller
         return;
     }
 
+    public function deleteUserFromClass($course_id, $user_id)
+    {
+        $course_member = CourseMembers::where('course_id', $course_id)->where('user_id', $user_id)->first();
+      //  return $course_member;
+        $course_member->delete();
+        return;
+    }
+
     public function getChats($course_id, Request $request)
     {
 
@@ -140,7 +148,7 @@ class CourseController extends Controller
 
         return Chat::with(['messages' => function ($q) use ($page) {
             $q->latest()->take(5 * $page)->get();
-        }])->withCount('messages')->where('course_id', $course->id)->where('student_id',$user_id)->first();
+        }])->withCount('messages')->where('course_id', $course->id)->where('student_id', $user_id)->first();
     }
 
     public function getUsers($course_id)
