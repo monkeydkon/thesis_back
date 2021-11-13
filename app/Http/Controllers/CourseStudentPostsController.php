@@ -20,26 +20,20 @@ class CourseStudentPostsController extends Controller
     {
 
         $course = Course::find($request->course_id);
-        Logger( $course->id);
-      //    $this->authorize('xusi', [auth()->user(),$course]);
-       // if (auth()->user()->can('create', [auth()->user(), $course])) {
-            $data = $request->validate([
-                'title' => 'required',
-                'content' => 'required',
-                'course_id' => 'required|exists:courses,id'
-            ]);
-            $post = new CourseStudentPosts();
-            $post->title = $data['title'];
-            $post->content = $data['content'];
-            $post->course_id = $data['course_id'];
-            $post->user_id = auth()->user()->id;
+        Logger($course->id);
+        $data = $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+            'course_id' => 'required|exists:courses,id'
+        ]);
+        $post = new CourseStudentPosts();
+        $post->title = $data['title'];
+        $post->content = $data['content'];
+        $post->course_id = $data['course_id'];
+        $post->user_id = auth()->user()->id;
 
-            //  return $post;
-            $post->save();
-            return $post;
-        // }else{
-        //     Logger('lol');
-        // }
+        $post->save();
+        return $post;
     }
 
     public function deletePost($id)

@@ -26,7 +26,9 @@ class AssignmentsController extends Controller
 
         if ($file) {
             $path = Storage::disk('local')->putFile('assignments', $file);
+            $filename = $file->getClientOriginalName();
             $assignment->path = $path;
+            $assignment->name = $filename;
         }
 
         $assignment->save();
@@ -36,6 +38,6 @@ class AssignmentsController extends Controller
     public function download($id)
     {
         $assignment = Assignments::find($id);
-        return Storage::download($assignment->path);
+        return Storage::download('files/GMHbEGp4ZPvAH55FAEU44bucZ292g7E21GX44XBw.doc');
     }
 }
