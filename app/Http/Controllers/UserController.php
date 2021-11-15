@@ -7,6 +7,9 @@ use App\Models\Followers;
 use App\Models\Role;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -89,6 +92,29 @@ class UserController extends Controller
         $user->save();
 
         return $user;
+    }
+    public function updateProfileImage(Request $request)
+    {
+
+        $image = $request->file('image');
+
+
+        $path = Storage::disk('local')->putFile('images', $image);
+
+        $user = User::find(auth()->user()->id);
+        $user->img_path = $path;
+        $user->save();
+        return;
+    }
+
+    public function getImage($id)
+    {
+        $user = User::find($id);
+        if (!$user->img_path) {
+            return;
+        }
+      //  $path = public_path().'/' . $user->img_path;
+        return  Storage::download($user->img_path);
     }
 
     public function follow($id)

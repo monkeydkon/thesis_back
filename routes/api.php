@@ -26,9 +26,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get("/", function (Request $request) {
-    return 'xa';
-});
 
 
 
@@ -113,7 +110,9 @@ Route::group([
 
     Route::get('/email', [UserController::class, 'findByEmail']);
     Route::put('/profile', [UserController::class, 'updateProfile'])->middleware('auth');
+    Route::post('/profile/image', [UserController::class, 'updateProfileImage'])->middleware('auth');
     Route::post('/{id}/follow', [UserController::class, 'follow'])->middleware('auth');
+    Route::get('/{id}/image', [UserController::class, 'getImage']);
     Route::post('/{id}/unfollow', [UserController::class, 'unfollow'])->middleware('auth');
     Route::get('/following/{id}', [UserController::class, 'getFollowStatus'])->middleware('auth');
     Route::get('/following', [UserController::class, 'getUsersFollowing'])->middleware('auth');
