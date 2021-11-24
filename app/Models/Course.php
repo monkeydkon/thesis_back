@@ -34,4 +34,8 @@ class Course extends Model
     public function assignments(){
         return $this->hasMany(Assignments::class);
     }
+
+    public function chats(){
+        return $this->hasMany(Chat::class);
+    }
 }

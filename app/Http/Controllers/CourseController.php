@@ -121,10 +121,32 @@ class CourseController extends Controller
         return;
     }
 
+    public function deleteClass($id)
+    {
+        $course = Course::find($id);
+        if ($course->user_id != auth()->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $course->files()->delete();
+        foreach($course->chats as $chat){
+            $chat->messages()->delete();
+        }
+        //$course->chats()->messages()->delete();
+        $course->chats()->delete();
+        $course->members()->delete();
+        $course->posts()->delete();
+        $course->studentPosts()->delete();
+        $course->assignments()->delete();
+      
+        return $course->delete();
+        
+    }
+
     public function deleteUserFromClass($course_id, $user_id)
     {
         $course_member = CourseMembers::where('course_id', $course_id)->where('user_id', $user_id)->first();
-      //  return $course_member;
+        //  return $course_member;
         $course_member->delete();
         return;
     }

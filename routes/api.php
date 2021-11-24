@@ -55,8 +55,9 @@ Route::group([
     Route::post('/', [CourseController::class, 'createClass'])->middleware('teacher');
     Route::get('{course_id}/search/{query}', [CourseController::class, 'search']);
     Route::post('{course_id}/addUser', [CourseController::class, 'addUserToClass'])->middleware('teacher');
+    Route::delete('{id}', [CourseController::class, 'deleteClass'])->middleware('teacher');
     Route::delete('{course_id}/deleteUser/{user_id}', [CourseController::class, 'deleteUserFromClass'])->middleware('teacher');
-    
+
     // Route::post('/post', [CourseController::class, 'createPost']);
     Route::get('/{id}/users', [CourseController::class, 'getUsers'])->middleware('teacher');
     Route::get('/{id}/chats', [CourseController::class, 'getChats'])->middleware('student');
@@ -70,14 +71,13 @@ Route::group([
         Route::post('/', [CoursePostsController::class, 'createPost']);
         Route::delete('/{id}', [CoursePostsController::class, 'deletePost']);
     });
-    
+
     Route::delete('/studentPosts/{id}', [CourseStudentPostsController::class, 'deletePost'])->middleware('teacher');
 
     Route::group([
         'middleware' => 'student'
     ], function () {
         Route::post('/studentPosts', [CourseStudentPostsController::class, 'createPost']);
-        
     });
 
     Route::group([
@@ -99,10 +99,10 @@ Route::group([
     // ], function(){
     //     Route::get('/')
     // });
-    
+
 });
 
-Route::get('/blogs/{id}/image',[BlogsController::class, 'getImage']);
+Route::get('/blogs/{id}/image', [BlogsController::class, 'getImage']);
 
 Route::group([
     'prefix' => 'user'
@@ -118,7 +118,7 @@ Route::group([
     Route::get('/following', [UserController::class, 'getUsersFollowing'])->middleware('auth');
     Route::get('/teacher', [UserController::class, 'searchTeacher'])->middleware(['auth', 'teacher']);
     Route::get('/{id?}', [UserController::class, 'findUser'])->middleware('auth');
-   
+
 
 
     Route::group([
@@ -126,7 +126,7 @@ Route::group([
         'middleware' => 'auth'
     ], function () {
         Route::post('/', [BlogsController::class, 'createBlog']);
-      //  Route::get('/{id}/image', [BlogsController::class, 'getImage']);
+        //  Route::get('/{id}/image', [BlogsController::class, 'getImage']);
         Route::post('/{id}/comment', [BlogsController::class, 'addComment']);
         Route::post('/{id}/image', [BlogsController::class, 'addImage']);
         Route::delete('/{blog_id}/comments/{comment_id}', [BlogsController::class, 'deleteComment']);
@@ -134,5 +134,3 @@ Route::group([
         Route::delete('/{id}', [BlogsController::class, 'deleteBlog']);
     });
 });
-
-
