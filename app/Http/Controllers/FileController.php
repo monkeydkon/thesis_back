@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\File;
@@ -40,5 +41,20 @@ class FileController extends Controller
 
         return Storage::download($file->path);
         return $file;
+    }
+
+    public function deleteFile($id)
+    {
+        $file = File::find($id);
+        if(!$file){
+            return response(['message' => 'not found'],404);
+        }
+
+        if($file->course->user_id != auth()->user()->id){
+            return response(['message' => 'unauthorized'],403);
+        }
+
+        Storage::disk('local')->delete($file->path);
+        $file->delete();
     }
 }

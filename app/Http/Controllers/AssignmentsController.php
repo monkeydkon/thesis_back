@@ -40,4 +40,19 @@ class AssignmentsController extends Controller
         $assignment = Assignments::find($id);
         return Storage::download('files/GMHbEGp4ZPvAH55FAEU44bucZ292g7E21GX44XBw.doc');
     }
+
+    public function deleteAssignment($id)
+    {
+        $assignment = Assignments::find($id);
+        if (!$assignment) {
+            return response(['message' => 'not found'], 404);
+        }
+
+        if ($assignment->course->user_id != auth()->user()->id) {
+            return response(['message' => 'unauthorized'], 403);
+        }
+
+        Storage::disk('local')->delete($assignment->path);
+        $assignment->delete();
+    }
 }

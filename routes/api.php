@@ -85,6 +85,7 @@ Route::group([
     ], function () {
         Route::post('/', [FileController::class, 'newFile'])->middleware('teacher');
         Route::get('/{id}', [FileController::class, 'download']);
+        Route::delete('/{id}', [FileController::class, 'deleteFile'])->middleware('teacher');
     });
 
     Route::group([
@@ -92,6 +93,7 @@ Route::group([
     ], function () {
         Route::post('/', [AssignmentsController::class, 'newAssignment'])->middleware('teacher');
         Route::get('{id}/file', [AssignmentsController::class, 'download']);
+        Route::delete('/{id}', [AssignmentsController::class, 'deleteAssignment'])->middleware('teacher');
     });
 
     // Route::group([
