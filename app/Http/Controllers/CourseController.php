@@ -25,13 +25,13 @@ class CourseController extends Controller
         $roleName = Role::where('id', auth()->user()->role->role_id)->first()->name;
 
         if ($roleName == 'teacher') {
-            $courses = Course::with('teacher', 'files', 'posts', 'studentPosts.user', 'members.user', 'assignments')->where('user_id', auth()->user()->id)->get();
+            $courses = Course::with('teacher', 'files', 'posts', 'studentPosts.user', 'members.user', 'assignments.answers.user')->where('user_id', auth()->user()->id)->get();
             return $courses;
         } else if ($roleName == 'student') {
             $courseMembers = CourseMembers::all()->where('user_id', auth()->user()->id);
             $res = [];
             foreach ($courseMembers as $courseMember) {
-                $course = Course::with('teacher', 'files', 'posts', 'studentPosts.user', 'members.user', 'assignments')->where('id', $courseMember->course->id)->first();
+                $course = Course::with('teacher', 'files', 'posts', 'studentPosts.user', 'members.user', 'assignments.answers.user')->where('id', $courseMember->course->id)->first();
                 array_push($res, $course);
             }
             return $res;

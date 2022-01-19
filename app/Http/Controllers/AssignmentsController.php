@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignmentAnswers;
 use App\Models\Assignments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,10 +36,37 @@ class AssignmentsController extends Controller
         return $assignment;
     }
 
+    public function submitAssignment(Request $request)
+    {
+        $request->validate([
+            'assignment_id' => 'required|exists:assignments,id',
+            'file' => 'required'
+        ]);
+
+        $answer = new AssignmentAnswers();
+        $answer->user_id = auth()->user()->id;
+        $answer->assignment_id = $request->assignment_id;
+        
+        $file = $request->file('file');
+
+        if($file){
+            $path = Storage::disk('local')->putFile('answers', $file);
+            $answer->path = $path;
+        }
+        $answer->save();
+        return $answer;
+    }
+
     public function download($id)
     {
         $assignment = Assignments::find($id);
-        return Storage::download('files/GMHbEGp4ZPvAH55FAEU44bucZ292g7E21GX44XBw.doc');
+        return Storage::download($assignment->path);
+    }
+    
+    public function downloadAnswer($id)
+    {
+        $answer = AssignmentAnswers::find($id);
+        return Storage::download($answer->path);
     }
 
     public function deleteAssignment($id)

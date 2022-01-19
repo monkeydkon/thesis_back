@@ -5,16 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BlogComments extends Model
+class AssignmentAnswers extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['comment' ,'user_id'];
-
-    public function blog()
-    {
-        return $this->belongsTo(Blogs::class);
-    }
 
     public function user()
     {

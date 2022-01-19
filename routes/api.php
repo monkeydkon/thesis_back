@@ -92,7 +92,9 @@ Route::group([
         'prefix' => 'assignments'
     ], function () {
         Route::post('/', [AssignmentsController::class, 'newAssignment'])->middleware('teacher');
+        Route::post('/submit', [AssignmentsController::class, 'submitAssignment'])->middleware('student');
         Route::get('{id}/file', [AssignmentsController::class, 'download']);
+        Route::get('{id}/answers/file', [AssignmentsController::class, 'downloadAnswer'])->middleware('teacher');
         Route::delete('/{id}', [AssignmentsController::class, 'deleteAssignment'])->middleware('teacher');
     });
 
